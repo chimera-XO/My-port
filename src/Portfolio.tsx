@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, ExternalLink, Volume2, VolumeX } from 'lucide-react';
+import { X, ExternalLink } from 'lucide-react';
 
 interface GameItem {
   id: string;
@@ -267,7 +267,6 @@ function DetailedTweetsIcon() {
 export default function Portfolio() {
   const [taps, setTaps] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
-  const [isMuted, setIsMuted] = useState(false);
   const [activeSection, setActiveSection] = useState<SectionId | null>(null);
   const [isPortrait, setIsPortrait] = useState(
     typeof window !== 'undefined' ? window.innerHeight > window.innerWidth : true
@@ -295,7 +294,6 @@ export default function Portfolio() {
           bgVideoRef.current.play().catch(() => {
             if (bgVideoRef.current) {
               bgVideoRef.current.muted = true;
-              setIsMuted(true);
               bgVideoRef.current.play().catch(() => {});
             }
           });
@@ -304,15 +302,6 @@ export default function Portfolio() {
     }
   };
 
-  const toggleSound = () => {
-    if (!bgVideoRef.current) return;
-    const nextMuted = !bgVideoRef.current.muted;
-    bgVideoRef.current.muted = nextMuted;
-    setIsMuted(nextMuted);
-    if (!nextMuted) {
-      bgVideoRef.current.play().catch(() => {});
-    }
-  };
 
   const navItems = [
     {
@@ -394,29 +383,6 @@ export default function Portfolio() {
         <div className="absolute inset-0 bg-black/25" />
       </div>
 
-      {/* Top semi-transparent glass status pill + sound toggle */}
-      <header className="fixed top-5 inset-x-0 flex items-center justify-center gap-2.5 px-4 z-20 pointer-events-none">
-        <div className="px-4 py-2 rounded-full bg-white/[0.08] backdrop-blur-xl border border-white/20 shadow-[0_8px_32px_rgba(0,0,0,0.45)] flex items-center gap-2.5 text-xs font-mono tracking-wider text-zinc-100">
-          <span className="w-2 h-2 rounded-full bg-white/85" />
-          {!isOpen ? (
-            <span>
-              LOCKED VAULT · {taps}/{TARGET_TAPS} TAPS
-            </span>
-          ) : (
-            <span>VAULT UNLOCKED · SELECT MODULE</span>
-          )}
-        </div>
-
-        {isOpen && (
-          <button
-            onClick={toggleSound}
-            aria-label={isMuted ? 'Unmute background audio' : 'Mute background audio'}
-            className="pointer-events-auto w-9 h-9 rounded-full bg-white/[0.1] hover:bg-white/[0.18] backdrop-blur-xl border border-white/25 flex items-center justify-center text-zinc-100 shadow-[0_8px_24px_rgba(0,0,0,0.45)] transition-colors cursor-pointer"
-          >
-            {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
-          </button>
-        )}
-      </header>
 
       {/* Main Center Stage */}
       <AnimatePresence mode="wait">
